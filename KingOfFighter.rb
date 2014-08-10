@@ -99,18 +99,24 @@ class Battle
   def initialize
     @log_print = Print.new
     @first_attacker = nil
+    @round = 0
   end
   def fight(attacker, defender)
     #처음 들어온 attacker가 선공
     if @first_attacker == nil
-      @first_attacker = attacker
-      log = "선공은 #{@first_atacker}입니다.\n"
+      @first_attacker = attacker.name
+      log = "선공은 #{@first_attacker}입니다.\n"
+      @log_print.console_print(log)
+      @log_print.text_print(log)
+    end
+    if @round % 2 == 0
+      log = "#{@round/2}번째 턴!!!\n"
       @log_print.console_print(log)
       @log_print.text_print(log)
     end
     attacker.attack(defender)
       if defender.check_unit_alive == 'alive'
-        log = "#{defender.name}의 남은 피는 #{defender.hp}입니다. \n공격자 변환\n공격자는 #{defender.name}\n\n"
+        log = "#{defender.name}의 남은 피는 #{defender.hp}입니다. \n\n공격자 변환\n공격자는 #{defender.name}\n\n"
         @log_print.console_print(log)
         @log_print.text_print(log)
         turn_change(attacker,defender)
@@ -125,6 +131,7 @@ class Battle
 
   def turn_change(attacker,defender)
     attacker,defender = defender, attacker
+    @round = @round + 1
     fight(attacker,defender)
   end
 
